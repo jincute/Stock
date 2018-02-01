@@ -1,7 +1,7 @@
 # -*-coding:utf-8 -*-
-# 
+#
 # Created on 2016-03-04, by felix
-# 
+#
 
 __author__ = 'felix'
 
@@ -10,7 +10,7 @@ import time
 import sys
 import threading
 
-from Queue import Queue
+from queue import Queue
 from optparse import OptionParser
 
 
@@ -30,10 +30,10 @@ class Worker(threading.Thread):
             if self.result_queue.full():
                 res = sorted([self.result_queue.get() for i in range(self.result_queue.qsize())], key=lambda s: s[0], reverse=True)
                 res.insert(0, ('0', u'名称     股价'))
-                print '***** start *****'
+                print('***** start *****')
                 for obj in res:
-                    print obj[1]
-                print '***** end *****\n'
+                    print(obj[1])
+                print('***** end *****\n')
             self.work_queue.task_done()
 
 
@@ -90,7 +90,9 @@ if __name__ == '__main__':
     options, args = parser.parse_args(args=sys.argv[1:])
 
     assert options.codes, "Please enter the stock code!"  # 是否输入股票代码
-    if filter(lambda s: s[:-6] not in ('sh', 'sz', 's_sh', 's_sz'), options.codes.split(',')):  # 股票代码输入是否正确
+    #print(options.codes[:-6])
+    # diff from python3 for filter function
+    if list(filter(lambda s: s[:-6] not in ('sh', 'sz', 's_sh', 's_sz'), options.codes.split(','))):  # 股票代码输入是否正确
         raise ValueError
 
     stock = Stock(options.codes, options.thread_num)
@@ -98,3 +100,6 @@ if __name__ == '__main__':
     while True:
         stock.del_params()
         time.sleep(options.sleep_time)
+
+
+#python stock_terminal.py -c sh600660
